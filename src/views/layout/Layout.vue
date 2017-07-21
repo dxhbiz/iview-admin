@@ -24,25 +24,25 @@
       <aside :class="collapsed?'menu-collapsed':'menu-expanded'">
         <Menu class="el-menu" width="auto" v-show="!collapsed" :open-names="openNames" :active-name="$route.path" accordion @on-select="menuSelect">
           <template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
-            <Submenu :name="item.pid" v-if="!item.leaf">
+            <Submenu :name="item.pid" v-if="!item.leaf && (isAdmin || permissions.indexOf(item.pid) >= 0)">
               <template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
-              <Menu-item v-for="(child,idx) in item.children" :name="child.path" :key="child.path" v-if="!child.hidden">{{child.name}}</Menu-item>
+              <Menu-item v-for="(child,idx) in item.children" :name="child.path" :key="child.path" v-if="!child.hidden && (isAdmin || permissions.indexOf(child.pid) >= 0)">{{child.name}}</Menu-item>
             </Submenu>
-            <Menu-item v-if="item.leaf&&item.children.length>0" :name="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</Menu-item>
+            <Menu-item v-if="item.leaf && item.children.length > 0 && (isAdmin || permissions.indexOf(item.children[0].pid) >= 0)" :name="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</Menu-item>
           </template>
         </Menu>
         <!--导航菜单-折叠后-->
         <ul class="el-menu ivu-menu ivu-menu-light ivu-menu-vertical collapsed" v-show="collapsed" ref="menuCollapsed">
-          <li v-for="(item,index) in $router.options.routes" v-if="!item.hidden" class="ivu-menu-submenu item">
+          <li v-for="(item,index) in $router.options.routes" v-if="!item.hidden && (isAdmin || permissions.indexOf(item.pid) >= 0)" class="ivu-menu-submenu item">
             <template v-if="!item.leaf">
               <div class="ivu-menu-submenu-title" style="padding-left: 20px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">{{item.name}}</div>
               <ul class="ivu-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
-                <li v-for="child in item.children" v-if="!child.hidden" :key="child.path" class="ivu-menu-item" style="background-color: #e4e8f1; padding-left: 40px;" :class="$route.path==child.path?'is-active':''" @click="$router.push(child.path)">{{child.name}}</li>
+                <li v-for="child in item.children" v-if="!child.hidden && (isAdmin || permissions.indexOf(child.pid) >= 0)" :key="child.path" class="ivu-menu-item" style="background-color: #e4e8f1; padding-left: 40px;" :class="$route.path==child.path?'is-active':''" @click="$router.push(child.path)">{{child.name}}</li>
               </ul>
             </template>
             <template v-else>
-              <li class="ivu-menu-submenu">
-                <div class="ivu-menu-submenu-title el-menu-item" style="padding-left: 20px;height: 56px;line-height: 56px;padding: 0 20px;" :class="$route.path==item.children[0].path?'is-active':''" @click="$router.push(item.children[0].path)">{{item.name}}</div>
+              <li class="ivu-menu-submenu item">
+                <div class="ivu-menu-submenu-title" style="padding-left: 20px;" :class="$route.path==item.children[0].path?'is-active':''" @click="$router.push(item.children[0].path)">{{item.children[0].name}}</div>
               </li>
             </template>
           </li>
@@ -70,9 +70,12 @@
 </template>
 
 <script>
+  import utils from '../../utils/index'
+
   export default {
     data () {
-      console.log(this.$t('test'))
+      let permissions = utils.storage.getLocaleStorage('permissions') || []
+      let isAdmin = utils.storage.getLocaleStorage('isAdmin') || false
       let curPath = this.$router.currentRoute.path
       let routes = this.$router.options.routes
       let openNames = []
@@ -81,18 +84,22 @@
         if (item.children && item.children.length > 0) {
           for (let i in item.children) {
             let child = item.children[i]
-            if (child.path === curPath) {
+            if (child.path === curPath && (isAdmin || permissions.indexOf(child.pid) >= 0)) {
               openNames.push(child.ppid)
             }
           }
         }
       }
+      console.log(permissions)
+      console.log(isAdmin)
       return {
         sysName: 'VUEADMIN',
         collapsed: false,
         sysUserName: '管理员',
         sysUserAvatar: '',
         openNames: openNames,
+        permissions: permissions,
+        isAdmin: isAdmin,
         form: {
           name: '',
           region: '',
@@ -131,7 +138,6 @@
         this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-' + i)[0].style.display = status ? 'block' : 'none'
       },
       menuSelect (name) {
-        console.log(name)
         this.$router.push({ path: name })
       }
     },

@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import store from './vuex/index'
+import router from './router/index'
 import iview from 'iview'
 import 'iview/dist/styles/iview.css'
 import 'nprogress/nprogress.css'
@@ -11,8 +12,6 @@ import i18n from './lang/i18n'
 Vue.use(iview, {
   i18n: key => i18n.vm._t(key)
 })
-
-import router from './router'
 
 /* eslint-disable no-new */
 new Vue({

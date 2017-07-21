@@ -13,6 +13,8 @@ export default {
   login: '登录',
   succSubmit: '提交成功',
   errSubmit: '提交失败',
+  nonePermission: '无访问权限',
+  errLogin: '登录失败',
   nav1: '导航一',
   nav1Test1: '测试1',
   nav1Test2: '测试2',

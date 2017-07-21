@@ -4,7 +4,7 @@
 
 import storage from './storage'
 
-const PERMISSION = 'permission'
+const PERMISSION = 'permissions'
 const TOKEN = 'token'
 
 var user = {}
