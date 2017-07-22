@@ -2,7 +2,7 @@
   <Row class="container">
     <Col span="24" class="header">
       <Col span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
-        {{collapsed?'':sysName}}
+        {{collapsed ? '' : sysName}}
       </Col>
       <Col span="10">
         <div class="tools" @click.prevent="collapse">
@@ -13,9 +13,7 @@
         <Dropdown>
           <span class="userinfo-inner">{{sysUserName}}</span>
           <Dropdown-menu slot="list">
-            <Dropdown-item>我的消息</Dropdown-item>
-            <Dropdown-item>设置</Dropdown-item>
-            <Dropdown-item divided @click.native="logout">退出登录</Dropdown-item>
+            <Dropdown-item @click.native="logout">{{$t('logout')}}</Dropdown-item>
           </Dropdown-menu>
         </Dropdown>
       </Col>
@@ -33,7 +31,7 @@
         </Menu>
         <!--导航菜单-折叠后-->
         <ul class="el-menu ivu-menu ivu-menu-light ivu-menu-vertical collapsed" v-show="collapsed" ref="menuCollapsed">
-          <li v-for="(item,index) in $router.options.routes" v-if="!item.hidden && (isAdmin || permissions.indexOf(item.pid) >= 0)" class="ivu-menu-submenu item">
+          <li v-for="(item,index) in $router.options.routes" v-if="!item.hidden && ((!item.leaf && (isAdmin || permissions.indexOf(item.pid) >= 0)) || (item.leaf &&　(isAdmin || permissions.indexOf(item.children[0].pid) >= 0)))" class="ivu-menu-submenu item">
             <template v-if="!item.leaf">
               <div class="ivu-menu-submenu-title" style="padding-left: 20px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">{{item.name}}</div>
               <ul class="ivu-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
@@ -41,9 +39,7 @@
               </ul>
             </template>
             <template v-else>
-              <li class="ivu-menu-submenu item">
                 <div class="ivu-menu-submenu-title" style="padding-left: 20px;" :class="$route.path==item.children[0].path?'is-active':''" @click="$router.push(item.children[0].path)">{{item.children[0].name}}</div>
-              </li>
             </template>
           </li>
         </ul>
@@ -90,12 +86,10 @@
           }
         }
       }
-      console.log(permissions)
-      console.log(isAdmin)
       return {
-        sysName: 'VUEADMIN',
+        sysName: this.$t('title'),
         collapsed: false,
-        sysUserName: '管理员',
+        sysUserName: utils.storage.getLocaleStorage('username'),
         sysUserAvatar: '',
         openNames: openNames,
         permissions: permissions,
@@ -113,22 +107,16 @@
       }
     },
     methods: {
-      onSubmit () {
-        console.log('submit!')
-      },
-      handleopen () {
-      },
-      handleclose () {
-      },
-      handleselect: function (a, b) {
-      },
       logout: function () {
-        var _this = this
-        this.$confirm('确认退出吗?', '提示', {
-        }).then(() => {
-          sessionStorage.removeItem('user')
-          _this.$router.push('/login')
-        }).catch(() => {
+        this.$Modal.confirm({
+          title: '',
+          content: this.$t('confirmLogout'),
+          onOk: () => {
+            utils.storage.removeLocaleStorage('token')
+            utils.storage.removeLocaleStorage('isAdmin')
+            utils.storage.removeLocaleStorage('permissions')
+            this.$router.push({path: '/login'})
+          }
         })
       },
       collapse () {
@@ -142,12 +130,6 @@
       }
     },
     mounted () {
-      var user = sessionStorage.getItem('user')
-      if (user) {
-        user = JSON.parse(user)
-        this.sysUserName = user.name || ''
-        this.sysUserAvatar = user.avatar || ''
-      }
     }
   }
 </script>

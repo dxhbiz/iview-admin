@@ -3,6 +3,7 @@
  */
 
 export default {
+  title: '管理后台',
   loginTitle: '系统登录',
   username: '用户名',
   plzInputUsername: '请填写用户名',
@@ -15,6 +16,8 @@ export default {
   errSubmit: '提交失败',
   nonePermission: '无访问权限',
   errLogin: '登录失败',
+  logout: '退出登录',
+  confirmLogout: '确定退出吗？',
   nav1: '导航一',
   nav1Test1: '测试1',
   nav1Test2: '测试2',

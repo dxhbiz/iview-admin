@@ -10,9 +10,9 @@ api.doLogin = function (params) {
       code: 0,
       msg: '登录成功',
       data: {
-        isAdmin: false,
+        isAdmin: true,
         username: 'admin',
-        permissions: [1, 3, 41, 42],
+        permissions: [21, 22, 23, 3, 42],
         token: 'test'
       }
     })
