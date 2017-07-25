@@ -8,6 +8,11 @@ import iview from 'iview'
 import 'iview/dist/styles/iview.css'
 import 'nprogress/nprogress.css'
 import i18n from './lang/i18n'
+if (process.env.NODE_ENV === 'development') {
+  var Mock = require('./mock/index')
+  Mock.default.bootstrap()
+}
+
 
 Vue.use(iview, {
   i18n: key => i18n.vm._t(key)

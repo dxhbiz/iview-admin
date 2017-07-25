@@ -6,7 +6,7 @@ import i18n from '../lang/i18n'
 import Hello from '@/components/Hello'
 import Login from '../views/login/Login'
 import Layout from '@/views/layout/Layout'
-import Table from '@/views/nav1/Table'
+import Platform from '../views/gamesetting/Platform.vue'
 
 const routes = [
   {
@@ -18,13 +18,12 @@ const routes = [
   {
     path: '/',
     component: Layout,
-    name: i18n.t('nav1'),
+    name: i18n.t('gameSetting'),
     pid: 1,
     children: [
-      { path: '/main', pid: 2, ppid: 1, component: Hello, name: i18n.t('nav1Test1'), hidden: true },
-      { path: '/table', pid: 3, ppid: 1, component: Table, name: i18n.t('nav1Test1') },
-      { path: '/form', pid: 4, ppid: 1, component: Hello, name: i18n.t('nav1Test2') },
-      { path: '/user', pid: 5, ppid: 1, component: Hello, name: i18n.t('nav1Test3') }
+      { path: '/platform', pid: 2, ppid: 1, component: Platform, name: i18n.t('platformManager') },
+      { path: '/address', pid: 3, ppid: 1, component: Hello, name: i18n.t('addressManager') },
+      { path: '/zone', pid: 4, ppid: 1, component: Hello, name: i18n.t('zoneManager') }
     ]
   },
   {
