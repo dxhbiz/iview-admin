@@ -1,8 +1,9 @@
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
-import { Platforms } from './data/user'
+import { Platforms, Address } from './data/user'
 // let _Users = Users
 let _Platforms = Platforms
+let _Address = Address
 
 export default {
   /**
@@ -86,6 +87,77 @@ export default {
           p.pname = pname
           p.desc = desc
           p.deleted = deleted
+        }
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success'
+          }])
+        }, 500)
+      })
+    })
+
+    mock.onGet('/address/list').reply(config => {
+      let {page, aname, size} = config.params;
+      let mockAddress = _Address.filter(address => {
+        if (aname && address.aname.indexOf(aname) < 0) return false;
+        return true
+      })
+      let total = mockAddress.length;
+      mockAddress = mockAddress.filter((u, index) => {
+        return index < size * page && index >= size * (page - 1)
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success',
+            data: {
+              total: total,
+              address: mockAddress
+            }
+          }]);
+        }, 1000);
+      });
+    })
+
+    mock.onPost('/address/add').reply(config => {
+      let { aname, atype, resurl, releaseurl, logurl, apiurl, mresurl, mreleaseurl } = JSON.parse(config.data)
+      _Address.unshift({
+        aid: new Date().getTime(),
+        aname: aname,
+        atype: atype,
+        resurl: resurl,
+        releaseurl: releaseurl,
+        logurl: logurl,
+        apiurl: apiurl,
+        mresurl: mresurl,
+        mreleaseurl: mreleaseurl
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success'
+          }])
+        }, 500)
+      })
+    })
+
+    mock.onPost('/address/edit').reply(config => {
+      let { aid, aname, atype, resurl, releaseurl, logurl, apiurl, mresurl, mreleaseurl } = JSON.parse(config.data)
+      _Address.some(p => {
+        if (p.aid === aid) {
+          p.aname = aname
+          p.atype = atype
+          p.resurl = resurl
+          p.releaseurl = releaseurl
+          p.logurl = logurl
+          p.apiurl = apiurl
+          p.mresurl = mresurl
+          p.mreleaseurl = mreleaseurl
         }
       })
       return new Promise((resolve, reject) => {

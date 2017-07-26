@@ -101,7 +101,6 @@
           username: this.loginModel.username,
           password: md5(this.loginModel.password)
         })
-        console.log(rst)
         if (rst.code !== 0) {
           this.$Message.error(this.$t('errLogin'))
           return

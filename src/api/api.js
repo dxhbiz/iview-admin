@@ -61,4 +61,18 @@ api.replacePlatform = function (action, params) {
   return request(requestUrl, 'post', params)
 }
 
+//获取地址列表
+api.getAddress = function (params) {
+  return request(`${baseurl}/address/list`, 'get', params)
+}
+
+//替换地址信息
+api.replaceAddress = function (action, params) {
+  let requestUrl = `${baseurl}/address/add`
+  if (action === 'edit') {
+    requestUrl = `${baseurl}/address/edit`
+  }
+  return request(requestUrl, 'post', params)
+}
+
 export default api

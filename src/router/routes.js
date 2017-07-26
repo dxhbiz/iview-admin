@@ -7,6 +7,7 @@ import Hello from '@/components/Hello'
 import Login from '../views/login/Login'
 import Layout from '@/views/layout/Layout'
 import Platform from '../views/gamesetting/Platform.vue'
+import Address from '../views/gamesetting/Address.vue'
 
 const routes = [
   {
@@ -22,7 +23,7 @@ const routes = [
     pid: 1,
     children: [
       { path: '/platform', pid: 2, ppid: 1, component: Platform, name: i18n.t('platformManager') },
-      { path: '/address', pid: 3, ppid: 1, component: Hello, name: i18n.t('addressManager') },
+      { path: '/address', pid: 3, ppid: 1, component: Address, name: i18n.t('addressManager') },
       { path: '/zone', pid: 4, ppid: 1, component: Hello, name: i18n.t('zoneManager') }
     ]
   },

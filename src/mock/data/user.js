@@ -11,6 +11,7 @@ const LoginUsers = [
 
 const Platforms = []
 const Users = []
+const Address = []
 
 for (let i = 0; i < 86; i++) {
   Users.push(Mock.mock({
@@ -32,6 +33,20 @@ for (let i = 0; i < 120; i++) {
   }))
 }
 
+for (let i = 0; i < 50; i++) {
+  Address.unshift(Mock.mock({
+    aid: i + 1,
+    aname: Mock.Random.cname(),
+    atype: Mock.Random.integer(1, 2),
+    resurl: Mock.Random.url(),
+    releaseurl: Mock.Random.url(),
+    apiurl: Mock.Random.url(),
+    logurl: Mock.Random.url(),
+    mresurl: Mock.Random.url(),
+    mreleaseurl: Mock.Random.url()
+  }))
+}
 
 
-export { LoginUsers, Users, Platforms }
+
+export { LoginUsers, Users, Platforms, Address }

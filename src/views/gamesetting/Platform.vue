@@ -93,7 +93,7 @@
             title: this.$t('status'),
             key: 'status',
             render: (h, params) => {
-              let deleted = this.datas[params.index].deleted
+              let deleted = parseInt(this.datas[params.index].deleted)
               let status = deleted ? this.$t('close') : this.$t('noraml')
               let style = deleted ? 'color:red' : ''
               return h('div', {
@@ -113,9 +113,6 @@
                   props: {
                     type: 'primary',
                     size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px'
                   },
                   on: {
                     click: () => {
@@ -156,6 +153,7 @@
         this.doGetPlatforms()
       },
       add () {
+        this.$refs['modalModel'].resetFields()
         this.modalAction = 'add'
         this.modalTitle = this.$t('add')
         this.modalShow = true
@@ -180,6 +178,7 @@
         let valid = await this.checkValidate(name)
         if (!valid) {
           this.$Message.error(this.$t('errForm'))
+          return
         }
         var rst = await api.replacePlatform(this.modalAction, this.modalModel)
         if (rst.code === 0) {
