@@ -121,7 +121,7 @@
           utils.storage.removeLocaleStorage('username')
           utils.storage.removeLocaleStorage('password')
         }
-        this.$Message.success(this.$t('succSubmit'))
+        this.$Message.success(this.$t('succLogin'))
         this.$router.push({path: nextPath})
       }
     }

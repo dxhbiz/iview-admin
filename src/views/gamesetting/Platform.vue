@@ -37,7 +37,7 @@
           </Radio-group>
         </Form-item>
         <Form-item>
-          <Button type="primary" @click="doModal('modalValidate')">{{modalTitle}}</Button>
+          <Button type="primary" @click="doModal('modalModel')">{{modalTitle}}</Button>
         </Form-item>
       </Form>
     </Modal>
@@ -49,7 +49,7 @@
 
   export default {
     data() {
-      let pageSizeOpts = [15, 20, 30, 40]
+      let pageSizeOpts = [10, 20, 30]
       return {
         pageSizeOpts: pageSizeOpts,
         pageSize: pageSizeOpts[0],
@@ -68,10 +68,14 @@
           deleted: 0
         },
         modalRule: {
-          platformName: [
+          pname: [
             {required: true, message: this.$t('plzInputPlatformName'), trigger: 'blur'}
+          ],
+          desc: [
+            {required: true, message: this.$t('plzInputPlatformDesc'), trigger: 'blur'}
           ]
         },
+        modalAction: '',
         columns: [
           {
             title: this.$t('number'),
@@ -91,7 +95,13 @@
             render: (h, params) => {
               let deleted = this.datas[params.index].deleted
               let status = deleted ? this.$t('close') : this.$t('noraml')
-              return h('div', status)
+              let style = deleted ? 'color:red' : ''
+              return h('div', {
+                domProps: {
+                  innerHTML: status
+                },
+                style: style
+              })
             }
           },
           {
@@ -146,14 +156,36 @@
         this.doGetPlatforms()
       },
       add () {
+        this.modalAction = 'add'
         this.modalTitle = this.$t('add')
         this.modalShow = true
       },
       edit (index) {
+        this.modalAction = 'edit'
         this.modalTitle = this.$t('edit')
+        this.modalModel.id = this.datas[index].id
+        this.modalModel.pname = this.datas[index].pname
+        this.modalModel.desc = this.datas[index].desc
+        this.modalModel.deleted = this.datas[index].deleted
         this.modalShow = true
       },
-      doModal (name) {
+      checkValidate (name) {
+        return new Promise((resolve, reject) => {
+          this.$refs[name].validate((valid) => {
+            resolve(valid)
+          })
+        })
+      },
+      async doModal (name) {
+        let valid = await this.checkValidate(name)
+        if (!valid) {
+          this.$Message.error(this.$t('errForm'))
+        }
+        var rst = await api.replacePlatform(this.modalAction, this.modalModel)
+        if (rst.code === 0) {
+          await this.doGetPlatforms()
+          this.modalShow = false
+        }
       }
     }
   }

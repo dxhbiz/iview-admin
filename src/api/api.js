@@ -52,4 +52,13 @@ api.getPlatforms = function (params) {
   return request(`${baseurl}/platform/list`, 'get', params)
 }
 
+//替换平台信息
+api.replacePlatform = function (action, params) {
+  let requestUrl = `${baseurl}/platform/add`
+  if (action === 'edit') {
+    requestUrl = `${baseurl}/platform/edit`
+  }
+  return request(requestUrl, 'post', params)
+}
+
 export default api
