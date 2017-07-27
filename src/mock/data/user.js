@@ -12,6 +12,7 @@ const LoginUsers = [
 const Platforms = []
 const Users = []
 const Address = []
+const Group = []
 
 for (let i = 0; i < 86; i++) {
   Users.push(Mock.mock({
@@ -49,4 +50,4 @@ for (let i = 0; i < 50; i++) {
 
 
 
-export { LoginUsers, Users, Platforms, Address }
+export { LoginUsers, Users, Platforms, Address, Group }

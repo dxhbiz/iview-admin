@@ -3,11 +3,14 @@
  */
 
 import i18n from '../lang/i18n'
-import Hello from '@/components/Hello'
 import Login from '../views/login/Login'
 import Layout from '@/views/layout/Layout'
 import Platform from '../views/gamesetting/Platform.vue'
 import Address from '../views/gamesetting/Address.vue'
+import Zone from '../views/gamesetting/Zone.vue'
+import Password from '../views/system/Password.vue'
+import Member from '../views/system/Member.vue'
+import Group from '../views/system/Group.vue'
 
 const routes = [
   {
@@ -24,17 +27,7 @@ const routes = [
     children: [
       { path: '/platform', pid: 2, ppid: 1, component: Platform, name: i18n.t('platformManager') },
       { path: '/address', pid: 3, ppid: 1, component: Address, name: i18n.t('addressManager') },
-      { path: '/zone', pid: 4, ppid: 1, component: Hello, name: i18n.t('zoneManager') }
-    ]
-  },
-  {
-    path: '/',
-    component: Layout,
-    name: i18n.t('nav2'),
-    pid: 21,
-    children: [
-      { path: '/page4', pid: 22, ppid: 21, component: Hello, name: i18n.t('nav2Test1') },
-      { path: '/page5', pid: 23, ppid: 21, component: Hello, name: i18n.t('nav2Test2') }
+      { path: '/zone', pid: 4, ppid: 1, component: Zone, name: i18n.t('zoneManager') }
     ]
   },
   {
@@ -44,16 +37,17 @@ const routes = [
     leaf: true,
     pid: 41,
     children: [
-      { path: '/page6', pid: 42, ppid: 41, component: Hello, name: i18n.t('nav3') }
+      { path: '/password', pid: 42, ppid: 41, component: Password, name: i18n.t('editPassword') }
     ]
   },
   {
     path: '/',
     component: Layout,
-    name: i18n.t('nav4'),
+    name: i18n.t('systemSetting'),
     pid: 61,
     children: [
-      { path: '/echarts', pid: 62, ppid: 61, component: Hello, name: i18n.t('nav4Test1') }
+      { path: '/member', pid: 62, ppid: 61, component: Member, name: i18n.t('memberManager') },
+      { path: '/group', pid: 63, ppid: 61, component: Group, name: i18n.t('groupManager') }
     ]
   }
 ]

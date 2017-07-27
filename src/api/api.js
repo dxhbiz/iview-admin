@@ -75,4 +75,18 @@ api.replaceAddress = function (action, params) {
   return request(requestUrl, 'post', params)
 }
 
+//获取分组列表
+api.getGroup = function (params) {
+  return request(`${baseurl}/group/list`, 'get', params)
+}
+
+//替换地址信息
+api.replaceGroup = function (action, params) {
+  let requestUrl = `${baseurl}/group/add`
+  if (action === 'edit') {
+    requestUrl = `${baseurl}/group/edit`
+  }
+  return request(requestUrl, 'post', params)
+}
+
 export default api

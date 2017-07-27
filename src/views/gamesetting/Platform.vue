@@ -2,14 +2,14 @@
   <div>
     <Row>
       <Col span="24" class="toolbar">
-      <Form inline :model="formModel">
-        <Form-item prop="pname">
+      <Form inline :model="formModel" :label-width="60">
+        <Form-item prop="pname" :label="$t('platformName')">
           <Input v-model="formModel.pname" :placeholder="$t('platformName')"></Input>
         </Form-item>
-        <Form-item>
+        <Form-item style="margin-left: -60px;">
           <Button type="primary" @click="getPlatforms">{{$t('search')}}</Button>
         </Form-item>
-        <Form-item>
+        <Form-item style="margin-left: -60px;">
           <Button type="primary" @click="add">{{$t('add')}}</Button>
         </Form-item>
       </Form>

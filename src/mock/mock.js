@@ -1,9 +1,10 @@
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
-import { Platforms, Address } from './data/user'
+import { Platforms, Address, Group } from './data/user'
 // let _Users = Users
 let _Platforms = Platforms
 let _Address = Address
+let _Group = Group
 
 export default {
   /**
@@ -158,6 +159,68 @@ export default {
           p.apiurl = apiurl
           p.mresurl = mresurl
           p.mreleaseurl = mreleaseurl
+        }
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success'
+          }])
+        }, 500)
+      })
+    })
+
+    mock.onGet('/group/list').reply(config => {
+      let {page, aname, size} = config.params;
+      let mockGroup = _Group.filter(address => {
+        if (aname && address.aname.indexOf(aname) < 0) return false;
+        return true
+      })
+      let total = mockGroup.length;
+      mockGroup = mockGroup.filter((u, index) => {
+        return index < size * page && index >= size * (page - 1)
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success',
+            data: {
+              total: total,
+              group: mockGroup
+            }
+          }]);
+        }, 1000);
+      });
+    })
+
+    mock.onPost('/group/add').reply(config => {
+      let { gname, remark, permissions } = JSON.parse(config.data)
+      _Group.unshift({
+        gid: new Date().getTime(),
+        gname: gname,
+        remark: remark,
+        permissions: permissions
+      })
+      console.log(_Group)
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success'
+          }])
+        }, 500)
+      })
+    })
+
+    mock.onPost('/group/edit').reply(config => {
+      let { gid, gname, remark, permissions } = JSON.parse(config.data)
+      _Group.some(p => {
+        if (p.gid === gid) {
+          p.gname = gname
+          p.remark = remark
+          p.permissions = permissions
         }
       })
       return new Promise((resolve, reject) => {
