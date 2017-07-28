@@ -89,4 +89,23 @@ api.replaceGroup = function (action, params) {
   return request(requestUrl, 'post', params)
 }
 
+//获取全部分组列表
+api.getAllGroup = function () {
+  return request(`${baseurl}/group/all`, 'get', {})
+}
+
+//获取成员列表
+api.getMember = function (params) {
+  return request(`${baseurl}/member/list`, 'get', params)
+}
+
+//替换成员信息
+api.replaceMember = function (action, params) {
+  let requestUrl = `${baseurl}/member/add`
+  if (action === 'edit') {
+    requestUrl = `${baseurl}/member/edit`
+  }
+  return request(requestUrl, 'post', params)
+}
+
 export default api

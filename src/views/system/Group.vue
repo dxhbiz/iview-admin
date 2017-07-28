@@ -70,7 +70,7 @@
         modalShow: false,
         modalTitle: '',
         modalModel: {
-          id: 0,
+          gid: 0,
           gname: '',
           remark: '',
           permissions: []

@@ -1,10 +1,11 @@
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
-import { Platforms, Address, Group } from './data/user'
+import { Platforms, Address, Group, Member } from './data/user'
 // let _Users = Users
 let _Platforms = Platforms
 let _Address = Address
 let _Group = Group
+let _Member = Member
 
 export default {
   /**
@@ -195,6 +196,27 @@ export default {
       });
     })
 
+    mock.onGet('/group/all').reply(config => {
+      let groups = []
+      _Group.forEach((group) => {
+        groups.push({
+          gid: group.gid,
+          gname: group.gname
+        })
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success',
+            data: {
+              group: groups
+            }
+          }]);
+        }, 1000);
+      });
+    })
+
     mock.onPost('/group/add').reply(config => {
       let { gname, remark, permissions } = JSON.parse(config.data)
       _Group.unshift({
@@ -203,7 +225,6 @@ export default {
         remark: remark,
         permissions: permissions
       })
-      console.log(_Group)
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve([200, {
@@ -221,6 +242,70 @@ export default {
           p.gname = gname
           p.remark = remark
           p.permissions = permissions
+        }
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success'
+          }])
+        }, 500)
+      })
+    })
+
+    mock.onGet('/member/list').reply(config => {
+      console.log(_Member)
+      let {page, username, size} = config.params;
+      let mockMember = _Member.filter(address => {
+        if (username && address.username.indexOf(username) < 0) return false;
+        return true
+      })
+      let total = mockMember.length;
+      mockMember = mockMember.filter((u, index) => {
+        return index < size * page && index >= size * (page - 1)
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success',
+            data: {
+              total: total,
+              member: mockMember
+            }
+          }]);
+        }, 1000);
+      });
+    })
+
+    mock.onPost('/member/add').reply(config => {
+      let { username, password, gid, remark } = JSON.parse(config.data)
+      _Member.unshift({
+        mid: parseInt(new Date().getTime() / 1000),
+        username: username,
+        password: password,
+        gid: gid,
+        remark: remark
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success'
+          }])
+        }, 500)
+      })
+    })
+
+    mock.onPost('/member/edit').reply(config => {
+      let { mid, username, password, gid, remark } = JSON.parse(config.data)
+      _Member.some(p => {
+        if (p.mid === mid) {
+          p.username = username
+          p.password = password
+          p.gid = gid
+          p.remark = remark
         }
       })
       return new Promise((resolve, reject) => {

@@ -59,5 +59,8 @@ export default {
   plzInputGroupName: '请填写分组名称',
   plzInputRemark: '请填写备注',
   menuList: '菜单列表',
-  checkAll: '全选'
+  checkAll: '全选',
+  plzSelectGroupName: '请选择分组名称',
+  confirmPassword: '确认密码',
+  notEqualPassword: '两次密码不一致'
 }
