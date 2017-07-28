@@ -317,5 +317,16 @@ export default {
         }, 500)
       })
     })
+
+    mock.onPost('/user/pass').reply(config => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success'
+          }])
+        }, 500)
+      })
+    })
   }
 }

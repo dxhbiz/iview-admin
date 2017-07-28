@@ -62,5 +62,10 @@ export default {
   checkAll: '全选',
   plzSelectGroupName: '请选择分组名称',
   confirmPassword: '确认密码',
-  notEqualPassword: '两次密码不一致'
+  notEqualPassword: '两次密码不一致',
+  oldPassword: '旧密码',
+  newPassword: '新密码',
+  plzInputOldPassword: '请填写旧密码',
+  plzInputNewPassword: '请填写新密码',
+  plzInputConfirmPassword: '请填写确认密码'
 }

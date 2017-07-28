@@ -108,4 +108,9 @@ api.replaceMember = function (action, params) {
   return request(requestUrl, 'post', params)
 }
 
+//修改密码
+api.editPassword = function (params) {
+  return request(`${baseurl}/user/pass`, 'post', params)
+}
+
 export default api
