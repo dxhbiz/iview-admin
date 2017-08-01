@@ -1,11 +1,12 @@
 import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
-import { Platforms, Address, Group, Member } from './data/user'
+import { Platforms, Address, Group, Member, Zone } from './data/user'
 // let _Users = Users
 let _Platforms = Platforms
 let _Address = Address
 let _Group = Group
 let _Member = Member
+let _Zone = Zone
 
 export default {
   /**
@@ -327,6 +328,132 @@ export default {
           }])
         }, 500)
       })
+    })
+
+    mock.onGet('/zone/platform').reply(config => {
+      let datas = []
+      _Platforms.forEach(p => {
+        datas.push({
+          value: p.pname,
+          label: p.desc
+        })
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            datas: datas
+          }])
+        }, 500)
+      })
+    })
+
+    mock.onGet('/zone/address').reply(config => {
+      let datas = []
+      _Address.forEach(p => {
+        datas.push({
+          value: p.aid,
+          label: p.aname
+        })
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            datas: datas
+          }])
+        }, 500)
+      })
+    })
+
+    mock.onGet('/zone/list').reply(config => {
+      let {page, size} = config.params;
+      let mockZone = _Zone.filter(address => {
+        return true
+      })
+      let total = mockZone.length;
+      mockZone = mockZone.filter((u, index) => {
+        return index < size * page && index >= size * (page - 1)
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success',
+            data: {
+              total: total,
+              zone: mockZone
+            }
+          }]);
+        }, 1000);
+      });
+    })
+
+    mock.onPost('/zone/add').reply(config => {
+      let params = JSON.parse(config.data);
+      _Zone.unshift({
+        gid: parseInt(new Date().getTime() / 1000),
+        deleted: params.deleted,
+        gtype: params.gtype,
+        pname: params.pname,
+        aid: params.aid,
+        status: params.status,
+        start: params.start,
+        showtime: params.showtime,
+        pid: params.pid,
+        zid: params.zid,
+        zname: params.zname,
+        pkey: params.pkey,
+        gkey: params.gkey,
+        ckey: params.ckey,
+        chargeurl: params.chargeurl,
+        loginip: params.loginip,
+        loginport: params.loginport,
+        mloginip: params.mloginip,
+        mloginport: params.mloginport
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success'
+          }]);
+        }, 1000);
+      });
+    })
+
+    mock.onPost('/zone/edit').reply(config => {
+      let params = JSON.parse(config.data);
+      _Zone.some(p => {
+        if (p.gid === params.gid) {
+          p.deleted = params.deleted
+          p.gtype = params.gtype
+          p.pname = params.pname
+          p.aid = params.aid
+          p.status = params.status
+          p.start = params.start
+          p.showtime = params.showtime
+          p.pid = params.pid
+          p.zid = params.zid
+          p.zname = params.zname
+          p.pkey = params.pkey
+          p.gkey = params.gkey
+          p.ckey = params.ckey
+          p.chargeurl = params.chargeurl
+          p.loginip = params.loginip
+          p.loginport = params.loginport
+          p.mloginip = params.mloginip
+          p.mloginport = params.mloginport
+        }
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success'
+          }]);
+        }, 1000);
+      });
     })
   }
 }

@@ -113,4 +113,26 @@ api.editPassword = function (params) {
   return request(`${baseurl}/user/pass`, 'post', params)
 }
 
+api.getAllPlatform = function () {
+  return request(`${baseurl}/zone/platform`, 'get')
+}
+
+api.getAllAddress = function () {
+  return request(`${baseurl}/zone/address`, 'get')
+}
+
+//获取区服列表
+api.getZone = function (params) {
+  return request(`${baseurl}/zone/list`, 'get', params)
+}
+
+//替换区服信息
+api.replaceZone = function (action, params) {
+  let requestUrl = `${baseurl}/zone/add`
+  if (action === 'edit') {
+    requestUrl = `${baseurl}/zone/edit`
+  }
+  return request(requestUrl, 'post', params)
+}
+
 export default api
