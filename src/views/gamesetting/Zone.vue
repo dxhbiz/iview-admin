@@ -99,7 +99,80 @@
           </Form-item>
         </Form>
     </Tab-pane>
-    <Tab-pane label="标签三">标签三的内容</Tab-pane>
+    <Tab-pane :label="$t('zoneBatchEdit')">
+      <Form ref="batchModel" :model="batchModel" :rules="batchRule" :label-width="100">
+        <Form-item :label="$t('isOpen')" prop="deleted">
+          <Select v-model="batchModel.deleted" :placeholder="$t('plzSelect')" style="width: 187px;">
+            <Option v-for="item in openLists" :value="item.value" :key="item.value" >{{ item.label }}</Option>
+          </Select>
+        </Form-item>
+        <Form-item :label="$t('zoneType')" prop="gtype">
+          <Select v-model="batchModel.gtype" :placeholder="$t('plzSelect')" style="width: 187px;">
+            <Option v-for="item in serverLists" :value="item.value" :key="item.value" >{{ item.label }}</Option>
+          </Select>
+        </Form-item>
+        <Form-item :label="$t('platformName')" prop="pnames">
+          <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
+            <Checkbox :value="checkAll" @click.prevent.native="handleCheckAll">{{$t('checkAll')}}</Checkbox>
+          </div>
+          <Checkbox-group v-model="batchModel.pnames" @on-change="checkAllGroupChange">
+            <Checkbox v-for="item in platformLists" :label="item.value" :key="item.value">{{item.label}}</Checkbox>
+          </Checkbox-group>
+        </Form-item>
+        <Form-item :label="$t('addressName')" prop="aid">
+          <Select v-model="batchModel.aid" :placeholder="$t('plzSelect')" style="width: 187px;">
+            <Option v-for="item in addressLists" :value="item.value" :key="item.value" >{{ item.label }}</Option>
+          </Select>
+        </Form-item>
+        <Form-item :label="$t('zoneStatus')" prop="status">
+          <Select v-model="batchModel.status" :placeholder="$t('plzSelect')" style="width: 187px;">
+            <Option v-for="item in statusLists" :value="item.value" :key="item.value" >{{ item.label }}</Option>
+          </Select>
+        </Form-item>
+        <Form-item :label="$t('startTime')" prop="start">
+          <Date-picker type="datetime" v-model="batchModel.start" :placeholder="$t('startTime')"></Date-picker>
+        </Form-item>
+        <Form-item :label="$t('showTime')" prop="showtime">
+          <Date-picker type="datetime" v-model="batchModel.showtime" :placeholder="$t('showTime')"></Date-picker>
+        </Form-item>
+        <Form-item :label="$t('platformZoneId')" prop="pid">
+          <Input v-model="batchModel.pid" :placeholder="$t('platformZoneId')"></Input>
+        </Form-item>
+        <Form-item :label="$t('gameZoneId')" prop="zid">
+          <Input v-model="batchModel.zid" :placeholder="$t('gameZoneId')"></Input>
+        </Form-item>
+        <Form-item :label="$t('zoneName')" prop="zname">
+          <Input v-model="batchModel.zname" :placeholder="$t('zoneName')"></Input>
+        </Form-item>
+        <Form-item :label="$t('platformKey')" prop="pkey">
+          <Input v-model="batchModel.pkey" :placeholder="$t('platformKey')"></Input>
+        </Form-item>
+        <Form-item :label="$t('gameKey')" prop="gkey">
+          <Input v-model="batchModel.gkey" :placeholder="$t('gameKey')"></Input>
+        </Form-item>
+        <Form-item :label="$t('rechargeKey')" prop="ckey">
+          <Input v-model="batchModel.ckey" :placeholder="$t('rechargeKey')"></Input>
+        </Form-item>
+        <Form-item :label="$t('GMAddress')" prop="chargeurl">
+          <Input v-model="batchModel.chargeurl" :placeholder="$t('GMAddress')"></Input>
+        </Form-item>
+        <Form-item :label="$t('serverHost')" prop="loginip">
+          <Input v-model="batchModel.loginip" :placeholder="$t('serverHost')"></Input>
+        </Form-item>
+        <Form-item :label="$t('serverPort')" prop="loginport">
+          <Input v-model="batchModel.loginport" :placeholder="$t('serverPort')"></Input>
+        </Form-item>
+        <Form-item :label="$t('mServerHost')" prop="mloginip">
+          <Input v-model="batchModel.mloginip" :placeholder="$t('mServerHost')"></Input>
+        </Form-item>
+        <Form-item :label="$t('mServerPort')" prop="mloginport">
+          <Input v-model="batchModel.mloginport" :placeholder="$t('mServerPort')"></Input>
+        </Form-item>
+        <Form-item>
+          <Button type="primary" @click="doModal('batchModel')">{{$t('add')}}</Button>
+        </Form-item>
+      </Form>
+    </Tab-pane>
   </Tabs>
 
 </template>
@@ -112,6 +185,14 @@
   export default {
     components: {expandZone},
     data() {
+      let that = this
+      const pnamesValidatorCheck = function (rule, value, callback) {
+        if (value.length <= 0) {
+          callback(that.$t('plzSelectPlatformName'))
+          return
+        }
+        callback()
+      }
       let pageSizeOpts = [10, 20, 30]
       return {
         openLists: [
@@ -182,6 +263,27 @@
           mloginip: '',
           mloginport: ''
         },
+        batchModel: {
+          gid: 0,
+          deleted: 1,
+          gtype: 1,
+          pnames: [],
+          aid: '',
+          status: 1,
+          start: '',
+          showtime: '',
+          pid: '',
+          zid: '',
+          zname: '',
+          pkey: '',
+          gkey: '',
+          ckey: '',
+          chargeurl: '',
+          loginip: '',
+          loginport: '',
+          mloginip: '',
+          mloginport: ''
+        },
         modalRule: {
           deleted: [
             {type: 'number', required: true, message: this.$t('plzSelectIsOpen'), trigger: 'change'}
@@ -220,7 +322,46 @@
             {required: true, message: this.$t('plzInputServerPort'), trigger: 'blur'}
           ]
         },
+        batchRule: {
+          deleted: [
+            {type: 'number', required: true, message: this.$t('plzSelectIsOpen'), trigger: 'change'}
+          ],
+          gtype: [
+            {type: 'number', required: true, message: this.$t('plzSelectZoneType'), trigger: 'change'}
+          ],
+          pnames: [
+            {required: true, validator: pnamesValidatorCheck, trigger: 'change'}
+          ],
+          aid: [
+            {type: 'number', required: true, message: this.$t('plzSelectAddressName'), trigger: 'change'}
+          ],
+          status: [
+            {type: 'number', required: true, message: this.$t('plzSelectZoneStatus'), trigger: 'change'}
+          ],
+          pid: [
+            {required: true, message: this.$t('plzInputPlatformZoneId'), trigger: 'blur'}
+          ],
+          zid: [
+            {required: true, message: this.$t('plzInputGameZoneId'), trigger: 'blur'}
+          ],
+          zname: [
+            {required: true, message: this.$t('plzInputZoneName'), trigger: 'blur'}
+          ],
+          ckey: [
+            {required: true, message: this.$t('plzInputRechargeKey'), trigger: 'blur'}
+          ],
+          chargeurl: [
+            {required: true, message: this.$t('plzInputGMAdress'), trigger: 'blur'}
+          ],
+          loginip: [
+            {required: true, message: this.$t('plzInputServerHost'), trigger: 'blur'}
+          ],
+          loginport: [
+            {required: true, message: this.$t('plzInputServerPort'), trigger: 'blur'}
+          ]
+        },
         modalAction: 'add',
+        checkAll: false,
         columns: [
           {
             type: 'expand',
@@ -379,6 +520,9 @@
         if (name === 1) {
           this.modalAction = 'add'
           this.$refs['modalModel'].resetFields()
+        } else if (name === 2) {
+          this.modalAction = 'batch'
+          this.$refs['batchModel'].resetFields()
         } else {
           this.tabsTwo = this.$t('addZone')
         }
@@ -419,8 +563,8 @@
         this.modalModel.pname = row.pname
         this.modalModel.aid = row.aid
         this.modalModel.status = row.status
-        this.modalModel.start = row.start
-        this.modalModel.showtime = row.showtime
+        this.modalModel.start = utils.date.format(new Date(row.start * 1000), 'yyyy-MM-dd hh:mm:ss')
+        this.modalModel.showtime = utils.date.format(new Date(row.showtime * 1000), 'yyyy-MM-dd hh:mm:ss')
         this.modalModel.pid = row.pid
         this.modalModel.zid = row.zid
         this.modalModel.zname = row.zname
@@ -434,7 +578,29 @@
         this.modalModel.mloginport = row.mloginport
         this.tabs = 1
       },
-      copy (index) {
+      copy (row) {
+        this.modalAction = 'add'
+        this.tabsTwo = this.$t('addZone')
+        this.modalModel.gid = row.gid
+        this.modalModel.deleted = row.deleted
+        this.modalModel.gtype = row.gtype
+        this.modalModel.pname = row.pname
+        this.modalModel.aid = row.aid
+        this.modalModel.status = row.status
+        this.modalModel.start = utils.date.format(new Date(row.start * 1000), 'yyyy-MM-dd hh:mm:ss')
+        this.modalModel.showtime = utils.date.format(new Date(row.showtime * 1000), 'yyyy-MM-dd hh:mm:ss')
+        this.modalModel.pid = row.pid
+        this.modalModel.zid = row.zid
+        this.modalModel.zname = row.zname
+        this.modalModel.pkey = row.pkey
+        this.modalModel.gkey = row.gkey
+        this.modalModel.ckey = row.ckey
+        this.modalModel.chargeurl = row.chargeurl
+        this.modalModel.loginip = row.loginip
+        this.modalModel.loginport = row.loginport
+        this.modalModel.mloginip = row.mloginip
+        this.modalModel.mloginport = row.mloginport
+        this.tabs = 1
       },
       checkValidate (name) {
         return new Promise((resolve, reject) => {
@@ -449,10 +615,33 @@
           this.$Message.error(this.$t('errForm'))
           return
         }
-        var rst = await api.replaceZone(this.modalAction, this.modalModel)
+        let params = this.modalModel
+        if (this.modalAction === 'batch') {
+          params = this.batchModel
+        }
+        var rst = await api.replaceZone(this.modalAction, params)
         if (rst.code === 0) {
           this.doGetZone()
           this.tabs = 0
+        }
+      },
+      handleCheckAll () {
+        this.checkAll = !this.checkAll;
+        if (this.checkAll) {
+          this.batchModel.pnames = []
+          for (let k in this.platformLists) {
+            let item = this.platformLists[k]
+            this.batchModel.pnames.push(item.value)
+          }
+        } else {
+          this.batchModel.pnames = []
+        }
+      },
+      checkAllGroupChange (data) {
+        if (data.length === this.platformLists.length) {
+          this.checkAll = true
+        } else {
+          this.checkAll = false
         }
       }
     }

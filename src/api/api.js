@@ -132,6 +132,9 @@ api.replaceZone = function (action, params) {
   if (action === 'edit') {
     requestUrl = `${baseurl}/zone/edit`
   }
+  if (action === 'batch') {
+    requestUrl = `${baseurl}/zone/batch`
+  }
   return request(requestUrl, 'post', params)
 }
 

@@ -30,7 +30,7 @@ for (let i = 0; i < 86; i++) {
 for (let i = 0; i < 120; i++) {
   Platforms.push(Mock.mock({
     id: i,
-    pname: Mock.Random.cname(),
+    pname: Mock.Random.word(),
     desc: Mock.Random.cname(),
     deleted: 0
   }))

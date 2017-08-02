@@ -103,5 +103,6 @@ export default {
   newServer: '新服',
   fullServer: '爆满',
   plzSelectPlatformName: '请选择平台名称',
-  plzSelectAddressName: '请选择地址名称'
+  plzSelectAddressName: '请选择地址名称',
+  zoneBatchEdit: '区服批量编辑'
 }

@@ -391,6 +391,14 @@ export default {
 
     mock.onPost('/zone/add').reply(config => {
       let params = JSON.parse(config.data);
+      let start = 0
+      let showtime = 0
+      if (params.start) {
+        start = parseInt(new Date(params.start).getTime() / 1000)
+      }
+      if (params.showtime) {
+        showtime = parseInt(new Date(params.showtime).getTime() / 1000)
+      }
       _Zone.unshift({
         gid: parseInt(new Date().getTime() / 1000),
         deleted: params.deleted,
@@ -398,8 +406,8 @@ export default {
         pname: params.pname,
         aid: params.aid,
         status: params.status,
-        start: params.start,
-        showtime: params.showtime,
+        start: start,
+        showtime: showtime,
         pid: params.pid,
         zid: params.zid,
         zname: params.zname,
@@ -424,6 +432,14 @@ export default {
 
     mock.onPost('/zone/edit').reply(config => {
       let params = JSON.parse(config.data);
+      let start = 0
+      let showtime = 0
+      if (params.start) {
+        start = parseInt(new Date(params.start).getTime() / 1000)
+      }
+      if (params.showtime) {
+        showtime = parseInt(new Date(params.showtime).getTime() / 1000)
+      }
       _Zone.some(p => {
         if (p.gid === params.gid) {
           p.deleted = params.deleted
@@ -431,8 +447,8 @@ export default {
           p.pname = params.pname
           p.aid = params.aid
           p.status = params.status
-          p.start = params.start
-          p.showtime = params.showtime
+          p.start = start
+          p.showtime = showtime
           p.pid = params.pid
           p.zid = params.zid
           p.zname = params.zname
@@ -446,6 +462,60 @@ export default {
           p.mloginport = params.mloginport
         }
       })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success'
+          }]);
+        }, 1000);
+      });
+    })
+
+    mock.onPost('/zone/batch').reply(config => {
+      let params = JSON.parse(config.data);
+      if (params.pnames.length <= 0) {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve([200, {
+              code: 100,
+              msg: 'success'
+            }]);
+          }, 1000);
+        });
+      }
+      let start = 0
+      let showtime = 0
+      if (params.start) {
+        start = parseInt(new Date(params.start).getTime() / 1000)
+      }
+      if (params.showtime) {
+        showtime = parseInt(new Date(params.showtime).getTime() / 1000)
+      }
+      for (let k in params.pnames) {
+        let pname = params.pnames[k]
+        _Zone.unshift({
+          gid: parseInt(new Date().getTime() / 1000),
+          deleted: params.deleted,
+          gtype: params.gtype,
+          pname: pname,
+          aid: params.aid,
+          status: params.status,
+          start: start,
+          showtime: showtime,
+          pid: params.pid,
+          zid: params.zid,
+          zname: params.zname,
+          pkey: params.pkey,
+          gkey: params.gkey,
+          ckey: params.ckey,
+          chargeurl: params.chargeurl,
+          loginip: params.loginip,
+          loginport: params.loginport,
+          mloginip: params.mloginip,
+          mloginport: params.mloginport
+        })
+      }
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve([200, {

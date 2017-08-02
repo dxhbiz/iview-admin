@@ -49,13 +49,8 @@
 
 <script>
   import api from '../../api/index'
-  import CheckboxGroup from '../../../node_modules/iview/src/components/checkbox/checkbox-group'
-  import Checkbox from '../../../node_modules/iview/src/components/checkbox/checkbox'
 
   export default {
-    components: {
-      Checkbox,
-      CheckboxGroup},
     data() {
       let pageSizeOpts = [10, 20, 30]
       return {
