@@ -492,10 +492,11 @@ export default {
       if (params.showtime) {
         showtime = parseInt(new Date(params.showtime).getTime() / 1000)
       }
+      let curIdx = parseInt(new Date().getTime() / 1000)
       for (let k in params.pnames) {
         let pname = params.pnames[k]
         _Zone.unshift({
-          gid: parseInt(new Date().getTime() / 1000),
+          gid: curIdx,
           deleted: params.deleted,
           gtype: params.gtype,
           pname: pname,
@@ -515,7 +516,59 @@ export default {
           mloginip: params.mloginip,
           mloginport: params.mloginport
         })
+        curIdx++
       }
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success'
+          }]);
+        }, 1000);
+      });
+    })
+
+    mock.onGet('/zone/getListByPlatform').reply(config => {
+      let params = config.params
+      let zones = []
+      _Zone.forEach(p => {
+        if (p.pname === params.pname) {
+          zones.push({
+            value: p.gid,
+            label: p.zname
+          })
+        }
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success',
+            data: {
+              zones: zones
+            }
+          }]);
+        }, 1000);
+      });
+    })
+
+    mock.onPost('/zone/batchAddress').reply(config => {
+      let params = JSON.parse(config.data);
+      if (params.zones.length <= 0) {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve([200, {
+              code: 100,
+              msg: 'success'
+            }]);
+          }, 1000);
+        });
+      }
+      _Zone.some(p => {
+        if (params.zones.indexOf(p.gid) >= 0) {
+          p.aid = params.aid
+        }
+      })
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve([200, {

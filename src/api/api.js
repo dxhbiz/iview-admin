@@ -138,4 +138,14 @@ api.replaceZone = function (action, params) {
   return request(requestUrl, 'post', params)
 }
 
+//获取指定平台的区服列表
+api.getPlatformZones = function (params) {
+  return request(`${baseurl}/zone/getListByPlatform`, 'get', params)
+}
+
+api.replaceZoneAddress = function (params) {
+  let requestUrl = `${baseurl}/zone/batchAddress`
+  return request(requestUrl, 'post', params)
+}
+
 export default api

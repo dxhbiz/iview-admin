@@ -173,6 +173,31 @@
         </Form-item>
       </Form>
     </Tab-pane>
+    <Tab-pane :label="$t('zoneBatchAddress')">
+      <Form ref="addressModel" :model="addressModel" :rules="addressRule" :label-width="100">
+        <Form-item :label="$t('addressName')" prop="aid">
+          <Select v-model="addressModel.aid" :placeholder="$t('plzSelect')" filterable style="width: 187px;">
+            <Option v-for="item in addressLists" :value="item.value" :key="item.value" >{{ item.label }}</Option>
+          </Select>
+        </Form-item>
+        <Form-item :label="$t('platformName')" prop="pname">
+          <Select v-model="addressModel.pname" :placeholder="$t('plzSelect')" filterable style="width: 187px;" @on-change="changeAddressPlatform">
+            <Option v-for="item in platformLists" :value="item.value" :key="item.value" >{{ item.label }}</Option>
+          </Select>
+        </Form-item>
+        <Form-item :label="$t('zoneName')" prop="zones">
+          <div style="border-bottom: 1px solid #e9e9e9;padding-bottom:6px;margin-bottom:6px;">
+            <Checkbox :value="addressModel.checkAll" @click.prevent.native="handleZoneCheckAll">{{$t('checkAll')}}</Checkbox>
+          </div>
+          <Checkbox-group v-model="addressModel.zones" @on-change="checkAllZoneChange">
+            <Checkbox v-for="item in zoneLists" :label="item.value" :key="item.value">{{item.label}}</Checkbox>
+          </Checkbox-group>
+        </Form-item>
+        <Form-item>
+          <Button type="primary" @click="doAddress('addressModel')">{{$t('edit')}}</Button>
+        </Form-item>
+      </Form>
+    </Tab-pane>
   </Tabs>
 
 </template>
@@ -189,6 +214,13 @@
       const pnamesValidatorCheck = function (rule, value, callback) {
         if (value.length <= 0) {
           callback(that.$t('plzSelectPlatformName'))
+          return
+        }
+        callback()
+      }
+      const zonesValidatorCheck = function (rule, value, callback) {
+        if (value.length <= 0) {
+          callback(that.$t('plzSelectZoneName'))
           return
         }
         callback()
@@ -502,7 +534,25 @@
             }
           }
         ],
-        datas: []
+        datas: [],
+        zoneLists: [],
+        addressModel: {
+          aid: '',
+          pname: '',
+          checkAll: false,
+          zones: []
+        },
+        addressRule: {
+          pname: [
+            {required: true, message: this.$t('plzSelectPlatformName'), trigger: 'change'}
+          ],
+          aid: [
+            {type: 'number', required: true, message: this.$t('plzSelectAddressName'), trigger: 'change'}
+          ],
+          zones: [
+            {required: true, validator: zonesValidatorCheck, trigger: 'change'}
+          ]
+        }
       }
     },
     async created () {
@@ -517,12 +567,17 @@
     },
     methods: {
       tabsClick (name) {
+        console.log(name)
         if (name === 1) {
           this.modalAction = 'add'
           this.$refs['modalModel'].resetFields()
         } else if (name === 2) {
           this.modalAction = 'batch'
+          this.checkAll = false
           this.$refs['batchModel'].resetFields()
+        } else if (name === 3) {
+          this.addressModel.checkAll = true
+          this.$refs['addressModel'].resetFields()
         } else {
           this.tabsTwo = this.$t('addZone')
         }
@@ -623,6 +678,8 @@
         if (rst.code === 0) {
           this.doGetZone()
           this.tabs = 0
+          this.modalAction = 'add'
+          this.tabsTwo = this.$t('addZone')
         }
       },
       handleCheckAll () {
@@ -642,6 +699,46 @@
           this.checkAll = true
         } else {
           this.checkAll = false
+        }
+      },
+      async changeAddressPlatform (value) {
+        let params = {
+          pname: value
+        }
+        let rst = await api.getPlatformZones(params)
+        if (rst.code === 0) {
+          this.zoneLists = rst.data.zones
+        }
+      },
+      handleZoneCheckAll () {
+        this.addressModel.checkAll = !this.addressModel.checkAll
+        this.addressModel.zones = []
+        if (this.addressModel.checkAll) {
+          for (let k in this.zoneLists) {
+            this.addressModel.zones.push(this.zoneLists[k].value)
+          }
+        }
+      },
+      checkAllZoneChange (data) {
+        if (data.length === this.zoneLists.length) {
+          this.addressModel.checkAll = true
+        } else {
+          this.addressModel.checkAll = false
+        }
+      },
+      async doAddress (name) {
+        let valid = await this.checkValidate(name)
+        if (!valid) {
+          this.$Message.error(this.$t('errForm'))
+          return
+        }
+        let params = this.addressModel
+        let rst = await api.replaceZoneAddress(params)
+        if (rst.code === 0) {
+          this.doGetZone()
+          this.tabs = 0
+          this.modalAction = 'add'
+          this.tabsTwo = this.$t('addZone')
         }
       }
     }

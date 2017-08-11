@@ -104,5 +104,7 @@ export default {
   fullServer: '爆满',
   plzSelectPlatformName: '请选择平台名称',
   plzSelectAddressName: '请选择地址名称',
-  zoneBatchEdit: '区服批量编辑'
+  zoneBatchEdit: '区服批量编辑',
+  zoneBatchAddress: '地址批量更新',
+  plzSelectZoneName: '请选择区服名称'
 }
