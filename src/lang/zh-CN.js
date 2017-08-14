@@ -55,6 +55,7 @@ export default {
   systemSetting: '系统设置',
   memberManager: '用户管理',
   groupManager: '分组管理',
+  mergeManager: '合区管理',
   groupName: '分组名称',
   remark: '备注',
   plzInputGroupName: '请填写分组名称',
@@ -106,5 +107,9 @@ export default {
   plzSelectAddressName: '请选择地址名称',
   zoneBatchEdit: '区服批量编辑',
   zoneBatchAddress: '地址批量更新',
-  plzSelectZoneName: '请选择区服名称'
+  plzSelectZoneName: '请选择区服名称',
+  targetZone: '目标区服',
+  plzSelectTargetZone: '请选择目标区服',
+  commit: '提交',
+  mergeSuccess: '合区成功'
 }

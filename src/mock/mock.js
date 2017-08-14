@@ -256,7 +256,6 @@ export default {
     })
 
     mock.onGet('/member/list').reply(config => {
-      console.log(_Member)
       let {page, username, size} = config.params;
       let mockMember = _Member.filter(address => {
         if (username && address.username.indexOf(username) < 0) return false;
@@ -409,6 +408,7 @@ export default {
         start: start,
         showtime: showtime,
         pid: params.pid,
+        oid: params.zid,
         zid: params.zid,
         zname: params.zname,
         pkey: params.pkey,
@@ -450,6 +450,7 @@ export default {
           p.start = start
           p.showtime = showtime
           p.pid = params.pid
+          p.oid = params.zid
           p.zid = params.zid
           p.zname = params.zname
           p.pkey = params.pkey
@@ -505,6 +506,7 @@ export default {
           start: start,
           showtime: showtime,
           pid: params.pid,
+          oid: params.zid,
           zid: params.zid,
           zname: params.zname,
           pkey: params.pkey,
@@ -569,6 +571,50 @@ export default {
           p.aid = params.aid
         }
       })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success'
+          }]);
+        }, 1000);
+      });
+    })
+
+    mock.onGet('/zone/uniqueList').reply(config => {
+      let datas = []
+      let zones = []
+      _Zone.forEach(p => {
+        if (p.oid === p.zid && zones.indexOf(p.zid) < 0) {
+          zones.push(p.zid)
+          datas.push({
+            value: p.zid,
+            label: p.zname
+          })
+        }
+      })
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([200, {
+            code: 0,
+            msg: 'success',
+            data: {
+              zones: datas
+            }
+          }]);
+        }, 1000);
+      });
+    })
+
+    mock.onPost('/zone/merge').reply(config => {
+      let params = JSON.parse(config.data);
+
+      _Zone.some(p => {
+        if (params.zones.indexOf(p.zid) >= 0) {
+          p.zid = params.target
+        }
+      })
+
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve([200, {

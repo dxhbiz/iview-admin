@@ -148,4 +148,12 @@ api.replaceZoneAddress = function (params) {
   return request(requestUrl, 'post', params)
 }
 
+api.getUniqueZones = function () {
+  return request(`${baseurl}/zone/uniqueList`, 'get')
+}
+
+api.doMerge = function (params) {
+  return request(`${baseurl}/zone/merge`, 'post', params)
+}
+
 export default api

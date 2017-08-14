@@ -8,6 +8,7 @@ import Layout from '@/views/layout/Layout'
 import Platform from '../views/gamesetting/Platform.vue'
 import Address from '../views/gamesetting/Address.vue'
 import Zone from '../views/gamesetting/Zone.vue'
+import Merge from '../views/gamesetting/Merge.vue'
 import Password from '../views/system/Password.vue'
 import Member from '../views/system/Member.vue'
 import Group from '../views/system/Group.vue'
@@ -27,7 +28,8 @@ const routes = [
     children: [
       { path: '/platform', pid: 2, ppid: 1, component: Platform, name: i18n.t('platformManager') },
       { path: '/address', pid: 3, ppid: 1, component: Address, name: i18n.t('addressManager') },
-      { path: '/zone', pid: 4, ppid: 1, component: Zone, name: i18n.t('zoneManager') }
+      { path: '/zone', pid: 4, ppid: 1, component: Zone, name: i18n.t('zoneManager') },
+      { path: '/merge', pid: 5, ppid: 1, component: Merge, name: i18n.t('mergeManager') }
     ]
   },
   {

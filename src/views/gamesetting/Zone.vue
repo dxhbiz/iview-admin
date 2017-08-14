@@ -567,7 +567,6 @@
     },
     methods: {
       tabsClick (name) {
-        console.log(name)
         if (name === 1) {
           this.modalAction = 'add'
           this.$refs['modalModel'].resetFields()
